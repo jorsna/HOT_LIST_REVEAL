@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOT LIST 🔥 — Volvo Car Ryen</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:100%; height:100%; background:#000; overflow:hidden; }
+
+  /* Intro fyller hele skjermen */
+  #intro-frame {
+    position:fixed; inset:0; width:100%; height:100%;
+    border:none; z-index:10;
+    transition: opacity .8s ease-out;
+  }
+  #intro-frame.hidden { opacity:0; pointer-events:none; }
+
+  /* Konseptdokument scrollbart under */
+  #hotlist-frame {
+    position:fixed; inset:0; width:100%; height:100%;
+    border:none; z-index:5;
+    opacity:0; pointer-events:none;
+    transition: opacity .8s ease-in;
+  }
+  #hotlist-frame.visible { opacity:1; pointer-events:all; }
+
+  body.list-mode { overflow:auto; }
+  body.list-mode #hotlist-frame { position:absolute; }
+</style>
+</head>
+<body>
+
+  <!-- Introfilm -->
+  <iframe id="intro-frame" src="HOT_LIST_Introfilm.html" allowfullscreen allow="autoplay"></iframe>
+
+  <!-- Konseptdokument — lastes i bakgrunnen -->
+  <iframe id="hotlist-frame" src="HOT_LIST_Dobbel_Provisjon.html"></iframe>
+
+<script>
+  const introFrame  = document.getElementById('intro-frame');
+  const listFrame   = document.getElementById('hotlist-frame');
+
+  // Lytt etter melding fra introfilmen når CTA-knappen trykkes
+  window.addEventListener('message', (e) => {
+    if (e.data === 'showHotList') showList();
+  });
+
+  // Fallback: hvis intro-iframen sender navigasjon til hotlist-siden
+  introFrame.addEventListener('load', () => {
+    try {
+      const url = introFrame.contentWindow.location.href;
+      if (url && url.includes('HOT_LIST_Dobbel_Provisjon')) showList();
+    } catch(e) {}
+  });
+
+  function showList() {
+    introFrame.classList.add('hidden');
+    listFrame.classList.add('visible');
+    document.body.classList.add('list-mode');
+    // Scroll til toppen av listesiden
+    setTimeout(() => { listFrame.contentWindow.scrollTo(0,0); }, 100);
+  }
+</script>
+</body>
+</html>
