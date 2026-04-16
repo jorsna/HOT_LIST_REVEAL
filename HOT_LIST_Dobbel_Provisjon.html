@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOT LIST – Dobbel provisjon</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #FF4500;
+    --fire2: #FF6A00;
+    --gold: #FFB800;
+    --amber: #FFAA33;
+    --coal: #0A0A0A;
+    --dark: #111111;
+    --panel: #191919;
+    --panel2: #202020;
+    --edge: #2A2A2A;
+    --body: #D4C9B8;
+    --dim: #8A8080;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--coal);
+    color: var(--body);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+  }
+
+  /* ══════════════════════════════
+     FLAMES SVG CANVAS
+  ══════════════════════════════ */
+  .flame-canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 260px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .flame {
+    animation: flameRise 2.4s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+  }
+
+  .flame:nth-child(1)  { animation-delay: 0s;    animation-duration: 2.2s; }
+  .flame:nth-child(2)  { animation-delay: 0.3s;  animation-duration: 2.6s; }
+  .flame:nth-child(3)  { animation-delay: 0.6s;  animation-duration: 2.0s; }
+  .flame:nth-child(4)  { animation-delay: 0.1s;  animation-duration: 2.8s; }
+  .flame:nth-child(5)  { animation-delay: 0.5s;  animation-duration: 2.3s; }
+  .flame:nth-child(6)  { animation-delay: 0.8s;  animation-duration: 2.1s; }
+  .flame:nth-child(7)  { animation-delay: 0.2s;  animation-duration: 2.5s; }
+  .flame:nth-child(8)  { animation-delay: 0.7s;  animation-duration: 2.7s; }
+  .flame:nth-child(9)  { animation-delay: 0.4s;  animation-duration: 2.4s; }
+  .flame:nth-child(10) { animation-delay: 0.9s;  animation-duration: 2.0s; }
+  .flame:nth-child(11) { animation-delay: 0.15s; animation-duration: 2.6s; }
+  .flame:nth-child(12) { animation-delay: 0.65s; animation-duration: 2.2s; }
+
+  @keyframes flameRise {
+    0%   { transform: scaleY(1)    scaleX(1)    translateY(0);  opacity: 0.9; }
+    40%  { transform: scaleY(1.12) scaleX(0.94) translateY(-8px); opacity: 1; }
+    100% { transform: scaleY(0.88) scaleX(1.06) translateY(4px);  opacity: 0.75; }
+  }
+
+  /* ══════════════════════════════
+     INTRO-MELDING
+  ══════════════════════════════ */
+  .intro-banner {
+    background: #F2EDE3;
+    color: #111;
+    padding: 52px 80px;
+    border-left: 6px solid var(--fire);
+    position: relative;
+  }
+
+  .intro-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fire);
+    display: block;
+    margin-bottom: 18px;
+  }
+
+  .intro-banner h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    color: #111;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .intro-banner p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #333;
+    max-width: 680px;
+    margin-bottom: 14px;
+  }
+
+  .intro-banner p:last-of-type { margin-bottom: 0; }
+  .intro-banner strong { color: #111; font-weight: 600; }
+
+  .intro-sig {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+  }
+
+  .intro-sig strong {
+    display: block;
+    font-weight: 700;
+    color: #111;
+    font-size: 16px;
+  }
+
+  /* ══════════════════════════════
+     COVER
+  ══════════════════════════════ */
+  .cover {
+    min-height: 96vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    position: relative;
+    overflow: hidden;
+    background: var(--coal);
+  }
+
+  .cover-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 100% 50% at 50% 100%, rgba(255,69,0,0.55) 0%, rgba(255,106,0,0.2) 30%, transparent 65%),
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(255,100,0,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(255,60,0,0.12) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  .cover-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,69,0,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,69,0,0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    z-index: 0;
+  }
+
+  .cover-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 80px 220px;
+    max-width: 920px;
+  }
+
+  .cover-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.9;
+  }
+
+  .cover-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 2px;
+    background: var(--amber);
+  }
+
+  .cover-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(80px, 15vw, 160px);
+    line-height: 0.86;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+    color: var(--amber);
+    text-shadow:
+      0 0 40px rgba(255,170,51,0.6),
+      0 0 80px rgba(255,100,0,0.3),
+      0 4px 60px rgba(0,0,0,0.9);
+  }
+
+  .cover-title .line2 {
+    color: var(--gold);
+    display: block;
+    text-shadow:
+      0 0 60px rgba(255,184,0,0.7),
+      0 0 120px rgba(255,100,0,0.4),
+      0 4px 60px rgba(0,0,0,0.9);
+  }
+
+  .cover-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: clamp(18px, 2.5vw, 26px);
+    color: var(--fire2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 16px;
+    margin-bottom: 40px;
+    opacity: 0.95;
+  }
+
+  .cover-desc {
+    font-size: 17px;
+    color: #C4B8A8;
+    max-width: 500px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .cover-footer {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 80px;
+    border-top: 1px solid rgba(255,100,0,0.2);
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+  }
+
+  .cover-footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--fire);
+    border-radius: 50%;
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%,100% { box-shadow: 0 0 4px var(--fire); opacity: 1; }
+    50%      { box-shadow: 0 0 16px var(--fire), 0 0 32px rgba(255,69,0,0.4); opacity: 0.6; }
+  }
+
+  /* ══════════════════════════════
+     LAYOUT
+  ══════════════════════════════ */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 80px 60px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(34px, 5vw, 54px);
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 40px rgba(255,170,51,0.2);
+  }
+
+  .hrule {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--fire) 0%, rgba(255,69,0,0.2) 60%, transparent 100%);
+    margin: 0 0 80px;
+  }
+
+  /* ══════════════════════════════
+     HOVEDDEAL
+  ══════════════════════════════ */
+  .deal-box {
+    background: linear-gradient(135deg, #1E1200 0%, #180E00 50%, #191919 100%);
+    border: 1px solid rgba(255,150,0,0.25);
+    border-top: 3px solid var(--fire);
+    padding: 52px 52px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .deal-box::after {
+    content: '🔥';
+    position: absolute;
+    right: 40px;
+    top: 30px;
+    font-size: 80px;
+    opacity: 0.12;
+    animation: floatEmoji 3s ease-in-out infinite;
+  }
+
+  @keyframes floatEmoji {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50%      { transform: translateY(-10px) rotate(5deg); }
+  }
+
+  .deal-box h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 40px;
+    color: var(--amber);
+    margin-bottom: 20px;
+    line-height: 1.05;
+  }
+
+  .deal-box h2 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .deal-box p {
+    font-size: 16px;
+    color: #B8AC9C;
+    max-width: 580px;
+    line-height: 1.8;
+  }
+
+  .deal-box p strong { color: #E0D4C0; font-weight: 600; }
+
+  /* ══════════════════════════════
+     REGLER
+  ══════════════════════════════ */
+  .rules-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+
+  .rule-block {
+    background: var(--panel);
+    padding: 32px 28px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .rule-block:hover { border-color: var(--fire); }
+
+  .rule-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 44px;
+    color: rgba(255,100,0,0.25);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .rule-block h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--amber);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .rule-block p {
+    font-size: 14px;
+    color: #9A9088;
+    line-height: 1.7;
+  }
+
+  /* ══════════════════════════════
+     TABELL
+  ══════════════════════════════ */
+  .list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fire2);
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--fire);
+    border-radius: 50%;
+    animation: glow 1.5s ease-in-out infinite;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: #161616;
+    border-bottom: 2px solid var(--fire);
+  }
+
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #7A7068;
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  thead th:nth-child(4),
+  thead th:nth-child(5),
+  thead th:nth-child(6) { text-align: right; }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.12s;
+  }
+
+  tbody tr:hover { background: rgba(255,80,0,0.05); }
+
+  tbody tr.critical { border-left: 3px solid var(--fire); }
+  tbody tr.high     { border-left: 3px solid var(--gold); }
+  tbody tr.medium   { border-left: 3px solid rgba(255,255,255,0.08); }
+
+  tbody td { padding: 13px 16px; vertical-align: middle; }
+
+  .t-rank {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: rgba(255,150,50,0.25);
+    width: 28px;
+  }
+
+  .t-reg {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #6A6460;
+  }
+
+  .t-model {
+    font-weight: 600;
+    color: #D8CCBC;
+    font-size: 14px;
+  }
+
+  .t-days {
+    text-align: right;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .d-critical { color: #FF6644; }
+  .d-high     { color: var(--gold); }
+  .d-medium   { color: #8A8480; }
+
+  .t-price {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #B8ACA0;
+  }
+
+  .t-prov { text-align: right; }
+
+  .prov-tag {
+    display: inline-block;
+    background: rgba(255,80,0,0.18);
+    color: var(--amber);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border: 1px solid rgba(255,120,0,0.4);
+    text-shadow: 0 0 8px rgba(255,170,51,0.4);
+  }
+
+  /* ══════════════════════════════
+     OPPSUMMERING
+  ══════════════════════════════ */
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 2px;
+    margin-bottom: 80px;
+  }
+
+  .summary-cell {
+    background: var(--panel);
+    padding: 22px 20px;
+    border-top: 3px solid var(--fire);
+  }
+
+  .s-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 30px;
+    color: var(--amber);
+    line-height: 1;
+    display: block;
+    text-shadow: 0 0 20px rgba(255,170,51,0.3);
+  }
+
+  .s-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6A6460;
+    margin-top: 5px;
+    display: block;
+  }
+
+  /* ══════════════════════════════
+     STEG
+  ══════════════════════════════ */
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+
+  .step {
+    background: var(--panel);
+    padding: 34px 30px;
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .step-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 38px;
+    color: var(--fire);
+    line-height: 1;
+    text-shadow: 0 0 16px rgba(255,69,0,0.4);
+  }
+
+  .step h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 14px;
+    color: #9A9088;
+    line-height: 1.7;
+  }
+
+  /* ══════════════════════════════
+     CALLOUT
+  ══════════════════════════════ */
+  .callout {
+    background: linear-gradient(135deg, #1A1000 0%, #151000 100%);
+    border: 1px solid rgba(255,184,0,0.2);
+    border-left: 4px solid var(--gold);
+    padding: 32px 36px;
+    margin-bottom: 80px;
+  }
+
+  .callout-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    opacity: 0.9;
+  }
+
+  .callout p {
+    font-size: 15px;
+    color: #B0A898;
+    line-height: 1.75;
+  }
+
+  .callout p strong { color: #D8CCBC; }
+
+  /* ══════════════════════════════
+     BUNNTEKST
+  ══════════════════════════════ */
+  .footer {
+    background: var(--dark);
+    border-top: 1px solid var(--edge);
+    padding: 34px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+
+  .footer-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #555;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 700px) {
+    .intro-banner { padding: 40px 28px; }
+    .cover-content { padding: 60px 32px 200px; }
+    .page { padding: 60px 28px; }
+    .rules-strip, .steps, .summary-bar { grid-template-columns: 1fr; }
+    .deal-box { padding: 36px 28px; }
+    .footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+
+  /* ── XC60 BONUS BOKS ── */
+  .xc60-box {
+    background: var(--panel);
+    border: 1px solid rgba(255,61,0,0.3);
+    border-top: 3px solid var(--fire);
+    padding: 52px 52px;
+    margin-top: 4px;
+    margin-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .xc60-box::before {
+    content: '2×';
+    position: absolute;
+    right: -10px; top: -30px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 200px;
+    color: rgba(255,61,0,0.05);
+    line-height: 1; pointer-events: none; letter-spacing: -8px;
+  }
+
+  .xc60-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--fire);
+    margin-bottom: 18px; display: block;
+  }
+
+  .xc60-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: clamp(40px, 7vw, 80px);
+    color: var(--amber); line-height: 0.92;
+    margin-bottom: 20px; letter-spacing: -1px;
+    text-shadow: 0 0 40px rgba(255,170,51,0.3);
+  }
+
+  .xc60-body {
+    font-size: clamp(15px, 1.8vw, 18px);
+    color: #BBB; line-height: 1.75; max-width: 640px;
+  }
+
+  .xc60-body strong { color: var(--text); }
+
+</style>
+</head>
+<body>
+
+<!-- ── INTRO-MELDING ── -->
+<div class="intro-banner">
+  <span class="intro-tag">Til teamet</span>
+  <h2>Vi setter turbo på bruktbilsalget 🔥</h2>
+  <p>
+    Vi har 20 biler som har stått altfor lenge. De er klargjorte, publiserte og klare for visning — men de trenger litt ekstra oppmerksomhet fra oss. Derfor lanserer vi nå <strong>HOT LIST</strong>.
+  </p>
+  <p>
+    Reglene er enkle: selg én av de 20 bilene på listen, og du får <strong>dobbel provisjon</strong>. Ingen konkurranse, ingen poengbrett — bare en direkte belønning for å flytte de bilene vi trenger å få ut.
+  </p>
+  <p>
+    Så snart du har signert kontrakt med kunden, er bilen <strong>låst til deg</strong> — ingen andre kan ta den. Provisjonen utbetales når bilen er fakturert, akkurat som normalt. Det gjelder fra i dag. Ta en titt på listen, bli kjent med bilene, og bruk neste kundesamtale til å presentere noe du faktisk tjener godt på.
+  </p>
+  <p>
+    <strong>Vi vinner alle på det. Lykke til!</strong>
+  </p>
+  <div class="intro-sig">
+    <strong>Jørgen</strong>
+    Salgssjef · Volvo Car Ryen
+  </div>
+</div>
+
+<!-- ── COVER ── -->
+<div class="cover">
+  <div class="cover-glow"></div>
+  <div class="cover-grid"></div>
+
+  <!-- FLAMES SVG -->
+  <svg class="flame-canvas" viewBox="0 0 1440 260" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="f1" cx="50%" cy="100%" r="60%">
+        <stop offset="0%" stop-color="#FF6A00" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#FF4500" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="f2" cx="50%" cy="100%" r="60%">
+        <stop offset="0%" stop-color="#FFB800" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#FF6A00" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="f3" cx="50%" cy="100%" r="60%">
+        <stop offset="0%" stop-color="#FF4500" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#FF2200" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <!-- Bakre flammelag -->
+    <g opacity="0.5">
+      <ellipse class="flame" cx="60"   cy="260" rx="38" ry="110" fill="url(#f3)"/>
+      <ellipse class="flame" cx="180"  cy="260" rx="55" ry="160" fill="url(#f1)"/>
+      <ellipse class="flame" cx="340"  cy="260" rx="42" ry="130" fill="url(#f3)"/>
+      <ellipse class="flame" cx="520"  cy="260" rx="60" ry="180" fill="url(#f1)"/>
+      <ellipse class="flame" cx="700"  cy="260" rx="50" ry="200" fill="url(#f2)"/>
+      <ellipse class="flame" cx="880"  cy="260" rx="58" ry="170" fill="url(#f1)"/>
+      <ellipse class="flame" cx="1060" cy="260" rx="44" ry="145" fill="url(#f3)"/>
+      <ellipse class="flame" cx="1240" cy="260" rx="52" ry="165" fill="url(#f1)"/>
+      <ellipse class="flame" cx="1400" cy="260" rx="40" ry="120" fill="url(#f3)"/>
+    </g>
+    <!-- Fremre flammelag -->
+    <g opacity="0.75">
+      <ellipse class="flame" cx="120"  cy="260" rx="30" ry="90"  fill="url(#f2)"/>
+      <ellipse class="flame" cx="290"  cy="260" rx="46" ry="140" fill="url(#f1)"/>
+      <ellipse class="flame" cx="460"  cy="260" rx="34" ry="110" fill="url(#f2)"/>
+      <ellipse class="flame" cx="620"  cy="260" rx="48" ry="155" fill="url(#f1)"/>
+      <ellipse class="flame" cx="800"  cy="260" rx="55" ry="185" fill="url(#f2)"/>
+      <ellipse class="flame" cx="960"  cy="260" rx="38" ry="120" fill="url(#f1)"/>
+      <ellipse class="flame" cx="1140" cy="260" rx="50" ry="150" fill="url(#f2)"/>
+      <ellipse class="flame" cx="1320" cy="260" rx="36" ry="105" fill="url(#f1)"/>
+    </g>
+    <!-- Innerste, lyseste topper -->
+    <g opacity="0.9">
+      <ellipse class="flame" cx="180"  cy="260" rx="18" ry="70"  fill="#FFDD88"/>
+      <ellipse class="flame" cx="520"  cy="260" rx="22" ry="90"  fill="#FFCC55"/>
+      <ellipse class="flame" cx="700"  cy="260" rx="26" ry="110" fill="#FFDD88"/>
+      <ellipse class="flame" cx="880"  cy="260" rx="20" ry="80"  fill="#FFCC55"/>
+      <ellipse class="flame" cx="1240" cy="260" rx="22" ry="85"  fill="#FFDD88"/>
+    </g>
+    <!-- Golvlinje -->
+    <rect x="0" y="248" width="1440" height="12" fill="#FF4500" opacity="0.6"/>
+    <rect x="0" y="252" width="1440" height="8"  fill="#FFB800" opacity="0.3"/>
+  </svg>
+
+  <div class="cover-content">
+    <div class="cover-eyebrow">Volvo Car Ryen · Internt · 2026</div>
+    <h1 class="cover-title">
+      HOT<span class="line2">LIST</span>
+    </h1>
+    <div class="cover-sub">Dobbel provisjon · 20 utvalgte biler</div>
+    <p class="cover-desc">
+      20 biler har stått for lenge. Nå gir alle 20 dobbel provisjon. Kontraktér bilen — og den er din. Provisjonen utbetales ved fakturering. Så enkelt er det.
+    </p>
+  </div>
+
+  <div class="cover-footer">
+    <span>Volvo Car Ryen · Stor-Oslo</span>
+    <div class="pulse-dot"></div>
+    <span>Konfidensielt · Internt</span>
+  </div>
+</div>
+
+<!-- ── HOVEDDEL ── -->
+<div class="page">
+  <div class="hrule"></div>
+
+  <div class="section-label">Konseptet</div>
+  <div class="section-title">Én regel. Dobbel belønning.</div>
+
+  <div class="deal-box">
+    <h2>Selg en <em>HOT LIST</em>-bil<br>— få dobbel provisjon.</h2>
+    <p>
+      Ingen poengbrett. Ingen konkurranse. Bare én klar regel: de <strong>20 bilene på HOT LIST</strong> gir <strong>dobbel provisjon</strong>.<br><br>
+      Bilene er valgt ut fordi de har stått lengst og binder mest kapital. Alle er publiserte og klare for visning. Det eneste som mangler, er en selger som setter dem i fokus.
+    </p>
+  </div>
+
+  <div class="rules-strip">
+    <div class="rule-block">
+      <div class="rule-num">01</div>
+      <h4>Hvem gjelder det?</h4>
+      <p>Alle selgere på Ryen. Ingen påmelding eller gruppeinndelinger. Den som kontrakterer bilen, eier den — og får doblingen.</p>
+    </div>
+    <div class="rule-block">
+      <div class="rule-num">02</div>
+      <h4>Kontraktert = låst til deg</h4>
+      <p>Så snart kunden har signert kontrakt, er bilen reservert til deg og tas av HOT LIST. Ingen andre kan stikke av med den. Provisjonen utbetales ved fakturering, akkurat som normalt.</p>
+    </div>
+    <div class="rule-block">
+      <div class="rule-num">03</div>
+      <h4>Hva med prisen?</h4>
+      <p>Vanlig salgsprosess og prisstrategi gjelder som normalt. HOT LIST endrer ingenting overfor kunden — kun provisjonsstrukturen internt for selger.</p>
+    </div>
+  </div>
+
+  <div class="hrule"></div>
+
+  <!-- LISTEN -->
+  <div class="section-label">De 20 bilene</div>
+  <div class="section-title">HOT LIST — Aktive biler</div>
+
+  <div class="list-header">
+    <div class="live-badge"><div class="live-dot"></div> Aktiv · Alle publisert på Finn.no</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5A5450;letter-spacing:1px;">Sortert etter dager på lager</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Reg.nr</th>
+        <th>Modell</th>
+        <th style="text-align:right">Dager</th>
+        <th style="text-align:right">Utpris</th>
+        <th style="text-align:right">Provisjon</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="critical"><td class="t-rank">1</td><td class="t-reg">EE13667</td><td class="t-model">Volvo XC40 Recharge Pro FWD</td><td class="t-days d-critical">239 d</td><td class="t-price">319 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="critical"><td class="t-rank">2</td><td class="t-reg">DS30537</td><td class="t-model">V90 T6 Ultra Dark</td><td class="t-days d-critical">216 d</td><td class="t-price">839 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="critical"><td class="t-rank">3</td><td class="t-reg">DS30508</td><td class="t-model">V90 T6 Plus Dark</td><td class="t-days d-critical">216 d</td><td class="t-price">719 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="critical"><td class="t-rank">4</td><td class="t-reg">DS27094</td><td class="t-model">V90 Recharge T6 Plus Dark</td><td class="t-days d-critical">216 d</td><td class="t-price">629 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="critical"><td class="t-rank">5</td><td class="t-reg">DS30504</td><td class="t-model">V90 T6 Ultra Dark</td><td class="t-days d-critical">216 d</td><td class="t-price">749 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="critical"><td class="t-rank">6</td><td class="t-reg">DS30515</td><td class="t-model">V90 T6 Plus Dark</td><td class="t-days d-high">203 d</td><td class="t-price">679 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="critical"><td class="t-rank">7</td><td class="t-reg">ZH63832</td><td class="t-model">V90 Recharge T6 Ultima Dark</td><td class="t-days d-high">203 d</td><td class="t-price">669 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="high"><td class="t-rank">8</td><td class="t-reg">PR70112</td><td class="t-model">XC90 T8 Ultra Dark</td><td class="t-days d-high">188 d</td><td class="t-price">969 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="high"><td class="t-rank">9</td><td class="t-reg">DS31491</td><td class="t-model">XC90 T8 Ultra Dark</td><td class="t-days d-high">175 d</td><td class="t-price">969 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="high"><td class="t-rank">10</td><td class="t-reg">EE77782</td><td class="t-model">C40 Recharge Plus</td><td class="t-days d-high">167 d</td><td class="t-price">349 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="high"><td class="t-rank">11</td><td class="t-reg">EE68831</td><td class="t-model">C40 Recharge Twin Ultimate</td><td class="t-days d-high">153 d</td><td class="t-price">429 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="high"><td class="t-rank">12</td><td class="t-reg">YF21673</td><td class="t-model">XC90 T8 Ultra Dark</td><td class="t-days d-high">153 d</td><td class="t-price">979 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="high"><td class="t-rank">13</td><td class="t-reg">EE89680</td><td class="t-model">C40 Recharge Twin Ultimate</td><td class="t-days d-high">148 d</td><td class="t-price">399 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">14</td><td class="t-reg">EB91419</td><td class="t-model">Volvo XC40 Recharge P8 Pure</td><td class="t-days d-medium">146 d</td><td class="t-price">339 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">15</td><td class="t-reg">EN41346</td><td class="t-model">ZEEKR X Privilege AWD</td><td class="t-days d-medium">146 d</td><td class="t-price">409 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">16</td><td class="t-reg">EN54215</td><td class="t-model">ZEEKR X Privilege AWD</td><td class="t-days d-medium">145 d</td><td class="t-price">419 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">17</td><td class="t-reg">EN41347</td><td class="t-model">ZEEKR X Privilege AWD</td><td class="t-days d-medium">145 d</td><td class="t-price">419 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">18</td><td class="t-reg">ED36228</td><td class="t-model">XC40 Recharge Twin Plus</td><td class="t-days d-medium">145 d</td><td class="t-price">369 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">19</td><td class="t-reg">EN57022</td><td class="t-model">Polestar 2</td><td class="t-days d-medium">142 d</td><td class="t-price">499 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+      <tr class="medium"><td class="t-rank">20</td><td class="t-reg">EN56992</td><td class="t-model">ZEEKR X Privilege AWD</td><td class="t-days d-medium">142 d</td><td class="t-price">419 000 kr</td><td class="t-prov"><span class="prov-tag">2×</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="summary-bar">
+    <div class="summary-cell">
+      <span class="s-val">20</span>
+      <span class="s-lbl">Biler på HOT LIST</span>
+    </div>
+    <div class="summary-cell">
+      <span class="s-val">135 d</span>
+      <span class="s-lbl">Snitt dager på lager</span>
+    </div>
+    <div class="summary-cell">
+      <span class="s-val">47,8M kr</span>
+      <span class="s-lbl">Bundet kapital</span>
+    </div>
+    <div class="summary-cell">
+      <span class="s-val">2×</span>
+      <span class="s-lbl">Provisjon ved fakturering</span>
+    </div>
+  </div>
+
+  <!-- XC60 BONUS -->
+  <div class="xc60-box">
+    <span class="xc60-tag">🔥 Ikke nok med det</span>
+    <div class="xc60-title">ALLE XC60-ER<br>GIR OGSÅ<br>DOBBEL PROVISJON.</div>
+    <p class="xc60-body">
+      30 publiserte XC60-er klare for visning. Selg én — tjen dobbelt.
+    </p>
+  </div>
+
+  <!-- STEG -->
+  <div class="section-label">Praktisk</div>
+  <div class="section-title">Slik fungerer det i praksis</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Bli kjent med bilene 🔍</h4>
+        <p>Gå gjennom listen og merk deg hvilke modeller som passer kundene du allerede jobber med. Alle bilene er klargjorte og klare for visning.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Presenter dem aktivt 💬</h4>
+        <p>Bruk HOT LIST-bilene i kundesamtaler der det er naturlig. Legg dem frem som et godt alternativ — mange vil overraskes over hva de får for pengene.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>Kontraktér — bilen er din 🔒</h4>
+        <p>Så snart kunden har signert kontrakt, er bilen låst til deg og fjernes fra HOT LIST. Ingen andre kan ta den. Du har gjort en god deal.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>Tjen dobbelt ved fakturering 💰</h4>
+        <p>Provisjonen utbetales når bilen er fakturert — akkurat som normalt. Ingen ekstra registrering. Dobbel sats, samme prosess.</p>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<!-- ── BUNNTEKST ── -->
+<div class="footer">
+  <div class="footer-brand">Volvo Car Ryen 🔥</div>
+  <div class="footer-meta">HOT LIST · Dobbel provisjon · Internt 2026</div>
+</div>
+
+</body>
+</html>
